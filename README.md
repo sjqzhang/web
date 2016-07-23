@@ -1,0 +1,3 @@
+```
+domain=*.web.com
+```
