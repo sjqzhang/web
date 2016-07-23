@@ -1,0 +1,140 @@
+软件版本:
+
+   Nginx:
+               1.2.9
+   Pcre:
+               8.33
+
+基础环境准备:
+
+   运行账户:
+       useradd nginx -s /sbin/nologin -d
+
+   安装开发依赖包:
+       yum -y groupinstall "Development tools" "Server Platform Libraries" 
+       yum -y install gd gd-devel pcre-devel
+
+部署路径:
+
+   Nginx:
+       /data/nginx
+
+   Log:
+       /data/log/nginx
+
+   Pcre:
+       /usr/local
+
+   配置:
+       /data/nginx/conf/vhosts/
+
+Pcre安装:
+
+
+   ./configure
+   make && make install
+
+Nginx安装:
+
+  ./configure \
+   --prefix=/data/nginx \
+   --error-log-path=/data/log/nginx/error.log \
+   --http-log-path=/data/log/nginx/access.log \
+   --pid-path=/var/run/nginx/nginx.pid  \
+   --lock-path=/var/lock/nginx.lock \
+   --user=nginx \
+   --group=nginx \
+   --with-http_ssl_module \
+   --with-http_flv_module \
+   --with-http_stub_status_module \
+   --with-http_gzip_static_module \
+   --http-client-body-temp-path=/var/tmp/nginx/client/ \
+   --http-proxy-temp-path=/var/tmp/nginx/proxy/ \
+   --http-fastcgi-temp-path=/var/tmp/nginx/fcgi/ \
+   --http-uwsgi-temp-path=/var/tmp/nginx/uwsgi \
+   --http-scgi-temp-path=/var/tmp/nginx/scgi \
+   --with-pcre=$TmpSoft/pcre-8.33 \
+   --with-file-aio \
+   --with-http_image_filter_module
+
+   make && make install
+
+Nginx配置:
+
+   默认采用线上BBS的nginx.conf做为标准
+   添加系统任务：
+   配置Nginx日志切割并添加至Cron
+   添加zabbix添加Nginx的插件脚本
+
+日志格式
+
+http {
+
+ log_format  main  '$time_iso8601    $status    $connection    $connection_requests    $remote_addr    $http_x_forwarded_for    $remote_user    $request_length    $request_time    $request_method    $server_protocol    $http_host    $server_port    $uri    $args    $http_referer    $body_bytes_sent    $http_user_agent    $ssl_protocol    $ssl_cipher    $upstream_addr    $upstream_status    $upstream_response_time';
+ access_log  logs/access.log  main;
+
+}
+
+注：以上各信息间以Tab键做分隔
+
+$time_iso8601 ISO8601标准格式下的本地时间
+
+$time_local 通用日志格式下的本地时间
+
+$status 记录请求状态
+
+$connection 连接的序列号
+
+$connection_requests 当前通过一个连接获得的请求数量
+
+$remote_addr, $http_x_forwarded_for 记录客户端IP地址
+
+$remote_user 记录客户端用户名称
+
+$request_length 请求的长度(包括请求行，请求头和请求正文)
+
+$request_time 请求处理时间,单位为秒,精度毫秒。从读入客户端的第一个字节开始,直到把最后一个字符发送给客户端后进行日志写入为止
+
+$request_method 请求方法
+
+$http_host 请求地址,即浏览器中输入的地址
+
+$server_port 端口号
+
+$uri 请求的URI
+
+$args 请求的参数
+
+$http_referer 记录从哪个页面链接访问过来的
+
+$body_bytes_sent 发送给客户端的字节数,不包括响应头的大小;该变量与Apache模块mod_log_config里的“%B”参数兼容
+
+$http_user_agent 记录客户端浏览器相关信息
+
+$ssl_protocol SSL协议版本
+
+$ssl_cipher 交换数据中的算法
+
+$upstream_addr 后台upstream的地址,即真正提供服务的主机地址
+
+$upstream_status upstream状态
+
+$upstream_response_time upstream响应时间
+
+$request 记录请求的URL和HTTP协议
+
+$bytes_sent 发送给客户端的总字节数
+
+nginx日志按天切割脚本
+
+   #!/bin/bash
+   log_path=/data/log/nginx/
+   date=`date -d "yesterday" +"%Y%m%d"`
+   access_file=${log_path}access_${date}.log
+   error_file=${log_path}error_${date}.log
+   mv ${log_path}access.log ${access_file}
+   mv ${log_path}error.log ${error_file}
+   kill -USR1 `cat ${log_path}nginx.pid`
+
+   #脚本文件名: /data/nginx/sbin/cut_nginx_log.sh
+   #crontab设置: 0 0 * * * /data/nginx/sbin/cut_nginx_log.sh
