@@ -608,7 +608,19 @@
             };
 
 
-        }
+        },
+	encodeHtml:function(s){
+	var REGX_HTML_ENCODE = /"|&|'|<|>|[\x00-\x20]|[\x7F-\xFF]|[\u0100-\u2700]/g;
+	    return (typeof s != "string") ? s :
+	        s.replace(REGX_HTML_ENCODE,
+	            function($0){
+	                var c = $0.charCodeAt(0), r = ["&#"];
+	                c = (c == 0x20) ? 0xA0 : c;
+	                r.push(c); r.push(";");
+	                return r.join("");
+	            });
+	}
+
 
         , _rowHtml: function(item, rowIndex){
             var opts = this.opts;
@@ -635,7 +647,12 @@
                     if(col.renderer){
                         trHtml.push(col.renderer(item[col.name],item,rowIndex));
                     }else{
-                        trHtml.push(item[col.name]);
+                        
+                      if(col.tips){
+                        trHtml.push('<span title="'+this.encodeHtml( item[col.name])+'">'+this.encodeHtml( item[col.name])+'</span>');
+                      } else {
+                        trHtml.push(this.encodeHtml(item[col.name]));
+		      }
                     }
 
                     trHtml.push('</span></td>');
