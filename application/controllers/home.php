@@ -16,11 +16,12 @@ class Home extends Base_Controller
 
     public function login()
     {
+		/*
         if (IS_POST) {
             $_username = $this->input->post("user_name");
             $_password = $this->input->post("password");
             $this->load->model("sys_user_model");
-			/*
+			
             $this->load->library('ldap');
 			$_username=str_replace(LDAP_EMAIL, '', $_username);
             $ldap_res = $this->ldap->bind($_username,$_password);
@@ -31,7 +32,7 @@ class Home extends Base_Controller
                                 unset($_admin['password']);
 
                                  MAUTH::after_login($_admin,true);
-			                	//$this->session->set_userdata(array("admin" => $_admin));
+			                	$this->session->set_userdata(array("admin" => $_admin));
 			               		$ot = array('code' => 0,
 			                    	'message' => '登录成功!');
 				            } else {
@@ -52,7 +53,7 @@ class Home extends Base_Controller
                             $this->sys_user_model->addEntity($_data);
                             //获取用户 用session保存登录跟上面保持一致
                             $_admin = $this->sys_user_model->getEntity(array("user_name" => $_username));
-                            //$this->session->set_userdata(array("admin" => $_admin));
+                            $this->session->set_userdata(array("admin" => $_admin));
                              unset($_admin['password']);
                             MAuth::after_login($_admin,true);
 					        $ot = array('code' => 0,
@@ -64,13 +65,22 @@ class Home extends Base_Controller
             }
 
             echo json_encode($ot);
-			
-			*/
 
-			$_admin = $this->sys_user_model->getEntity(array("user_name" => $_username));
+
+        } else {
+		 $this->load->view('login');
+		}
+			*/
+			
+        
+		if (IS_POST) {
+            $_username = $this->input->post("user_name");
+			$_password = $this->input->post("password");
+			$_admin = $this->sys_user_model->getEntity(array("user_name" => $_username,'password'=>md5($_password)));
             if (!empty($_admin)) {
                 if ($_admin['flag_valid'] == 1) {
                     $this->session->set_userdata(array("admin" => $_admin));
+					MAUTH::after_login($_admin,true);
                     $ot = array('code' => 0,
                         'message' => '登录成功!');
                 } else {
@@ -85,6 +95,7 @@ class Home extends Base_Controller
         } else {
             $this->load->view('login');
         }
+		
 
     }
 
