@@ -103,6 +103,7 @@ function scalar(&$that,$sql){
              {
              $json=$_REQUEST;
              }
+			
              foreach($where_map as $key=>$op)
              {
                    if (!isset($json[$key]))  $json[$key]=$op;
@@ -112,8 +113,8 @@ function scalar(&$that,$sql){
                        $key=$keys[0];
 
                         // $value=trim(mysql_escape_string(urldecode($json[$keys[1]]))); 
-                         
-                       $value=  escape_string(trim($json[$keys[1]]));
+                     
+                       $value=  escape_string(trim($json[trim($keys[1])]));
 
                    }
                    else
@@ -170,6 +171,7 @@ function scalar(&$that,$sql){
 //                              {
 //                                  $tempv=trim(preg_replace("/\'/","''",urldecode($arr[$i])));        
 //                              }
+                             $tempv=trim(preg_replace("/\'/","''",urldecode($arr[$i])));      
                             if($i==$inLen-1)
                             {
                             $v.= "'".$tempv."'";
@@ -232,6 +234,7 @@ function scalar(&$that,$sql){
 			  $w=preg_replace("/\(\s+and\s+/"," ( ",$w);
 			  $w=preg_replace("/\(\s+like\s+/"," ( ",$w);
 			  $w=preg_replace("/\(\s+or\s+/"," ( ",$w);
+			  $w=preg_replace("/\(\s+\)/"," ",$w);
 
               $len2=strlen($w);
               if($len==$len2)
