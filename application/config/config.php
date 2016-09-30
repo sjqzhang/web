@@ -392,5 +392,7 @@ $config['site_url']='http://test.web.com';
 
 $config['project_name']	= 'web';
 
+$config['use_ldap']=false;
+
 /* End of file config.php */
 /* Location: ./application/config/config.php */
