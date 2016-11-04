@@ -35,6 +35,7 @@ class Main extends Base_Controller {
 
        // $_gid = $this->session->userdata['admin'];
         $this->load->helper('cookie');
+        /*
         $data['platform_id']= get_cookie('platform_id');
         if($data['platform_id']){
             $this->load->model('notice/nt_platform_model');
@@ -46,6 +47,7 @@ class Main extends Base_Controller {
             
          
         }
+	*/
 	   // $_gid = MAuth::get_user_info();
 
 	           $_gid = $this->session->userdata['admin'];
