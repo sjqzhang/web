@@ -50,13 +50,18 @@ class Home extends Base_Controller
 										'password'=>md5($_password.time()),
 										'email'=> $_username.LDAP_EMAIL,
 										'createdate'=>date('Y-m-d H:i:s'),
-										'sys_group_id'=>'2',//普通用户组 这个>等用户组表调整以后修改
+										'sys_group_id'=>'3',//普通用户组 这个>等用户组表调整以后修改
 										'flag_valid'=>1
 								);
 								$this->sys_user_model->addEntity($_data);
 								//获取用户 用session保存登录跟上面保持一致
 								$_admin = $this->sys_user_model->getEntity(array("user_name" => $_username));
 								$this->session->set_userdata(array("admin" => $_admin));
+							 	$_group_user=array(
+								'user_id'=>$_admin['id'],
+								'group_id'=>$_data['sys_group_id'],
+								);
+								$this->db->insert('sys_group_user',$_group_user);
 								 unset($_admin['password']);
 								MAuth::after_login($_admin,true);
 								$ot = array('code' => 0,
