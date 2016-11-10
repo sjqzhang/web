@@ -40,7 +40,7 @@ class EX_Controller extends CI_Controller {
     }
 
 
-	public function sys_log($error_code='0',$error_message=''){
+	public function sys_log($error_message='',$error_code='0'){
 	
 
 	
@@ -57,9 +57,9 @@ class EX_Controller extends CI_Controller {
 	 $data['url']=uri_string();
 	 $data['params']=json_encode($params);
 	 $data['time']=time();
-	 $data['query']=$this->db->last_query();
+	 $data['query']='';//$this->db->last_query();
 	 $user=MAuth::get_user_info();
-	 $data['admin_id']=$user['id'];
+	 $data['admin_id']=@$user['user_name'];
 	 $data['ip']=$this->get_ip();
 	 $data['error_message']=$error_message;
 	 $data['error_code']=$error_code;
