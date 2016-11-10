@@ -17,7 +17,7 @@ class EX_Controller extends CI_Controller {
 
 		if(strpos($url, 'sys_') === 0&&strpos($url, 'sys_log') !== 0){
 		
-		   $this->sys_log();
+		   $this->sys_log('系统日志');
 			
 		}
 
