@@ -723,3 +723,21 @@ ul.nav li.light-blue:hover ul.dropdown-menu{
     font-weight: 500;
 
 }
+
+
+
+#sidebar-toggle {
+    position: absolute; top: 0; right: 0; z-index: 1; display: none;
+}
+#sidebar-toggle>a {
+    display: block; color: #fff; text-decoration: none; font-size: 16px; 
+    cursor: pointer; width: 50px; line-height: 45px; text-align: center;
+}
+@media only screen and (max-width: 991px) {
+    #sidebar-collapse { display: none; }
+    .skin-4 .sidebar.responsive {
+        top: 0; z-index: 9999; transform: translateX(-100%); overflow: visible;
+    }
+    #sidebar-toggle { display: block; }
+    #navbar-container>ul.head-navbar, #navbar-container>div.pull-right { display: none; }
+}
