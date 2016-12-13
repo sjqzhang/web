@@ -66,7 +66,7 @@
 
             <!-- /section:basics/navbar.layout.brand -->
         </div>
-
+<div id="sidebar-toggle"><a class="fa fa-bars"></a></div>
         <!-- #section:basics/navbar.dropdown -->
         <div class="navbar-buttons navbar-header pull-right" role="navigation">
             <ul class="nav ace-nav">
