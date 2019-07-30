@@ -183,9 +183,19 @@
 </div>
 
 <script>
+    function get_base_url(path){
+        var prefix=path.split('/')[0] 
+  if(location.href.indexOf(prefix)>=0){
+        return path
+    } else {
+        return 'index.php/'+path;
+    }
+    }
 $(document).ready(function () {
 
     var postUrl;
+
+
 
     var _user_groups=<?php echo json_encode($user_groups)?>;
 
@@ -265,7 +275,7 @@ $(document).ready(function () {
                 $.ajax({
                     type: "POST",
                     dataType: "json",
-//                    url: "template/t1_add",
+//                    url:get_base_url( "template/t1_add"),
                     url: postUrl,
                     data: $('#myform').serialize(),
                     success: function (data) {
@@ -324,7 +334,7 @@ $(document).ready(function () {
     }
 
     $("#editForm").click(function (e) {
-        postUrl = 'sys_user/edit';
+        postUrl = get_base_url('sys_user/edit');
         var data = mmg.selectedRows();
         validForm.resetForm();
         $('.form-group').removeClass('has-error');
@@ -334,7 +344,7 @@ $(document).ready(function () {
                 type: "POST",
                 dataType: "json",
                 data:{'user_id':fdata.id},
-                url: "sys_user/get_group_user",
+                url: get_base_url( "sys_user/get_group_user"),
                 success: function (data) {
                     editForm(fdata,data);
                     
@@ -381,7 +391,7 @@ $(document).ready(function () {
         $.ajax({
             type: "POST",
             dataType: "json",
-            url: "sys_user/get_group",
+            url: get_base_url( "sys_user/get_group"),
             success: function (data) {
                // console.log(data);
                 se.empty();
@@ -440,7 +450,7 @@ $(document).ready(function () {
     //AJAX示例
     var mmg = $('#table-data').mmGrid({
         cols: cols,
-        url: 'sys_user/get_list',
+        url: get_base_url('sys_user/get_list'),
         method: 'post',
         remoteSort: true,
         root: 'items',
@@ -504,7 +514,7 @@ $(document).ready(function () {
                             $.ajax({
                                 type: "POST",
                                 dataType: "json",
-                                url: "sys_user/delete",
+                                url:get_base_url( "sys_user/delete"),
                                 data: {'id': arr},
                                 success: function (data) {
                                     if (data.code == 0) {
@@ -540,7 +550,7 @@ $(document).ready(function () {
         $.ajax({
             type: "POST",
             dataType: "json",
-            url: "sys_user/get_group",
+            url: get_base_url("sys_user/get_group"),
             success: function (data) {
                 console.log(data);
                 se.empty();
