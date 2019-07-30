@@ -164,6 +164,14 @@
 </div>
 
 <script>
+    function get_base_url(path){
+        var prefix=path.split('/')[0] 
+  if(location.href.indexOf(prefix)>=0){
+        return path
+    } else {
+        return 'index.php/'+path;
+    }
+    }
 $(document).ready(function () {
 
     var postUrl;
@@ -211,7 +219,7 @@ $(document).ready(function () {
                 $.ajax({
                     type: "POST",
                     dataType: "json",
-//                    url: "template/t1_add",
+//                    url:get_base_url( "template/t1_add"),
                     url: postUrl,
                     data: $('#myform').serialize(),
                     success: function (data) {
@@ -245,7 +253,7 @@ $(document).ready(function () {
     }
 
     $("#addForm").click(function (e) {
-        postUrl = 'sys_user_group/add';
+        postUrl =get_base_url( 'sys_user_group/add');
         $('.modal-title').text('增加');
         validForm.resetForm();
         $('.form-group').removeClass('has-error');
@@ -254,7 +262,7 @@ $(document).ready(function () {
     });
 
     $("#permissonForm").click(function (e) {
-        postUrl = 'sys_user_group/add';
+        postUrl = get_base_url('sys_user_group/add');
         $('.modal-title').text('增加');
         validForm.resetForm();
         $('.form-group').removeClass('has-error');
@@ -284,7 +292,7 @@ $(document).ready(function () {
     //AJAX示例
     var mmg = $('#table-data').mmGrid({
         cols: cols,
-        url: 'sys_user_group/get_list',
+        url: get_base_url('sys_user_group/get_list'),
         method: 'post',
         remoteSort: true,
         root: 'items',
@@ -311,7 +319,7 @@ $(document).ready(function () {
             loadPage('index.php/sys_group_permission/config?sys_group_id='+id);
         } else if ($(e.target).is('.btn-info')) {
             e.stopPropagation();  //阻止事件冒泡
-            postUrl = 'sys_user_group/edit';
+            postUrl = get_base_url('sys_user_group/edit');
             validForm.resetForm();
             $('.form-group').removeClass('has-error');
             editForm(item);
@@ -335,7 +343,7 @@ $(document).ready(function () {
                             $.ajax({
                                 type: "POST",
                                 dataType: "json",
-                                url: "sys_user_group/delete",
+                                url: get_base_url("sys_user_group/delete"),
                                 data: {'id': id},
                                 success: function (data) {
                                     if (data.code == 0) {
@@ -380,4 +388,3 @@ $(document).ready(function () {
 <!-- /.row -->
 </div>
 <!-- /.page-content-area -->
-
